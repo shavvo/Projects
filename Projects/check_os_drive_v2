@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ `id -u` -ne 0 ]; then
+   echo "Must be run as root"
+   exit 1
+fi
+
+OMRPATH="/opt/dell/srvadmin/bin"
+OMREPORT="${OMRPATH}/omreport"
+
+PHYSDRIVES=`$OMREPORT storage pdisk controller=0 |awk '/^State/ {print $NF}' |grep -v Online`
+if [ $? -ne 0 ]; then
+    echo "Unable to gather controller information"
+    exit 1
+fi
+
+if [ "$PHYSDRIVES" != "" ]; then
+    echo "Physical disk on Controller 0 in $PHYSDRIVES state!"
+    exit 1
+fi
+exit 0
