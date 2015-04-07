@@ -2,19 +2,19 @@
 
 import sys
 
-txt = open('/var/log/error', 'r')
-txt_read = txt.readlines()
-txt.close
+
+with open('/var/log/error', 'r') as txt:
+    txt_read = txt.readlines()
 
 bad_blk = "Virtual disk bad block medium error is detected"
 
 printList = []
 for line in txt_read:
-    if ( bad_blk in line ):
+    if bad_blk in line:
         printList.append(line)
 
 if printList:
     print "Bad blocks detected on virtual disks"
     sys.exit(2)
-elif not printList:
+else:
     print "OK"
