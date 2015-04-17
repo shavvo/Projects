@@ -7,4 +7,4 @@ def file_len(fname):
     return count
 
 
-print file_len('/Users/aballens/system.log')
+print file_len('/var/log/system.log')
