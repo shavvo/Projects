@@ -1,29 +1,59 @@
 #!/usr/bin/python
-
+import json
 import os
-
-last_run_file = "/Users/aballens/last_run.txt"
-
-with open(last_run_file , 'rw+') as last_run:
-    if os.stat(last_run).st_size == 0:
-        last_run.write("0")
-    last_run_read = last_run.readlines()
-    data = [a.strip() for a in last_run_read][0]
+from hashlib import md5
+import sys
+import shlex
+import subprocess
 
 
-#Open log file and previous count file
-log_file = open('/Users/aballens/system.log', 'r')
+error = "Storage Service  Virtual disk bad block medium error is detected"
 
-# Get byte count of log file
-log_line = log_file.readlines()
-log_count = log_file.tell()
+with open('position-file.json') as f:
+    pos = json.loads(f.read())
+lines_read = pos['lines_read']
 
-# Read previous file count
-#last_file_pos = last_run.readlines()
+def run(cmdline):
+    args = shlex.split(cmdline)
+    cmd = ["/usr/bin/sudo"]
+    cmd.extend(args)
+    return subprocess.check_output(cmd, stderr=subprocess.STDOUT)
 
-# Pull previous count info
-#data = [a.strip() for a in last_file_pos][0]
+count = 0
+printlist = []
+with open('/var/log/error') as log_file:
+    for line in log_file:
+        if count == 0:
+            hash = md5(line).hexdigest()
+        count += 1
+        if (count <= lines_read and hash == pos['creation_hash']):
+            continue
+        if error in line:
+            line2 = line.split()
+            error_list = {}
+            # Format: (vdisk, controller)
+            printlist.append((line2[20], line2[25]))
+
+print "Read {0} lines".format(count)
+print printlist
+
+for vdisk, controller in printlist:
+    try:
+        bad_block = run("/opt/dell/srvadmin/bin/omreport storage vdisk controller={0} vdisk={1}".format(controller, vdisk))
+        data = [a.split()[-1] for a in bad_block.split("\n") if 'Bad Blocks'in a]
+        content = [c.replace(' ',',') for c in data]
+        content = "".join(content)
+        if content == 'Yes':
+            print "Bad Blocks in vdisk {0} controller {1}".format(vdisk, controller)
+        except subprocess.CalledProcessError:
+            print "Oh noes"
 
 
-log_file.close()
-last_run.close()
+print "I have now read {0} lines".format(count)
+print "The hash of the first line is {0}".format(hash)
+
+
+pos['lines_read'] = count
+pos['creation_hash'] = hash
+with open('position-file.json', 'w') as f:
+    json.dump(pos, f)
