@@ -49,8 +49,8 @@ for vdisk, controller in printlist:
         content = "".join(content)
         if content == 'Yes':
             print "Bad Blocks in vdisk {0} controller {1}".format(vdisk, controller)
-        except subprocess.CalledProcessError:
-            print "Error: {0}".format(error)
+        except subprocess.CalledProcessError, e:
+            print "Error: ", e.output
 
 pos['lines_read'] = count
 pos['creation_hash'] = pos_hash
