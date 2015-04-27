@@ -6,11 +6,16 @@ import sys
 import shlex
 import subprocess
 
-
+pos_file = '/etc/stalker/scripts/data/bad_blocks_position.json'
 error = "Storage Service  Virtual disk bad block medium error is detected"
+pos = {"lines_read" : 0, "creation_hash" : 0}
 
-with open('position-file.json') as f:
-    pos = json.loads(f.read())
+with open(pos_file , 'a+') as f:
+    try:
+        pos = json.load(f)
+    except ValueError as err:
+        with open(pos_file, 'w') as pos_file:
+            json.dump(pos, pos_file)
 lines_read = pos['lines_read']
 
 def run(cmdline):
@@ -21,21 +26,20 @@ def run(cmdline):
 
 count = 0
 printlist = []
+pos_hash = None
+
 with open('/var/log/error') as log_file:
     for line in log_file:
         if count == 0:
-            hash = md5(line).hexdigest()
+            pos_hash = md5(line).hexdigest()
         count += 1
-        if (count <= lines_read and hash == pos['creation_hash']):
+        if (count <= lines_read and pos_hash == pos['creation_hash']):
             continue
         if error in line:
             line2 = line.split()
             error_list = {}
             # Format: (vdisk, controller)
             printlist.append((line2[20], line2[25]))
-
-print "Read {0} lines".format(count)
-print printlist
 
 for vdisk, controller in printlist:
     try:
@@ -46,14 +50,9 @@ for vdisk, controller in printlist:
         if content == 'Yes':
             print "Bad Blocks in vdisk {0} controller {1}".format(vdisk, controller)
         except subprocess.CalledProcessError:
-            print "Oh noes"
-
-
-print "I have now read {0} lines".format(count)
-print "The hash of the first line is {0}".format(hash)
-
+            print "Error: {0}".format(error)
 
 pos['lines_read'] = count
-pos['creation_hash'] = hash
-with open('position-file.json', 'w') as f:
+pos['creation_hash'] = pos_hash
+with open('/etc/stalker/scripts/data/bad_blocks_position.json', 'w') as f:
     json.dump(pos, f)
