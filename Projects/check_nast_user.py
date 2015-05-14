@@ -2,7 +2,7 @@
 
 import sys
 import json
-from haslib import md5
+from hashlib import md5
 
 pos_file = '/etc/stalker/scripts/data/check_nast_user_position.json'
 nast_user = "Accepted publickey for nast from"
@@ -40,9 +40,13 @@ with open('/var/log/auth.log' , 'r') as auth_log:
             logList.append(data[10])
 
 # Alert if login from nast outside of acceptedIps
+unknown_ips = set()
 for ip in logList:
     if ip not in acceptedIps:
-        print "Nast login from unknown IP {0}".format(ip)
+        unknown_ips.add(ip)
+
+for element in unknown_ips:
+    print "Nast login from unknown IP {0}".format(element)
 
 
 # Update position file
