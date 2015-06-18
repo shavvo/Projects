@@ -41,6 +41,7 @@ with open('/var/log/error') as log_file:
             # Format: (vdisk, controller)
             printlist.append((line2[20], line2[25]))
 
+block_list = set()
 for vdisk, controller in printlist:
     try:
         bad_block = run("/opt/dell/srvadmin/bin/omreport storage vdisk controller={0} vdisk={1}".format(controller, vdisk))
@@ -48,9 +49,12 @@ for vdisk, controller in printlist:
         content = [c.replace(' ',',') for c in data]
         content = "".join(content)
         if content == 'Yes':
-            print "Bad Blocks in vdisk {0} controller {1}".format(vdisk, controller)
-        except subprocess.CalledProcessError, e:
-            print "Error: ", e.output
+            block_list.add((vdisk, controller))
+    except subprocess.CalledProcessError as e:
+        print "Error: ", e.output
+
+for element in block_list:
+    print "Bad Blocks in vdisk {0} controller {1}".format(element[0], element[1])
 
 pos['lines_read'] = count
 pos['creation_hash'] = pos_hash
