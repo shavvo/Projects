@@ -38,4 +38,30 @@ def storage():
     result = c_state.split()[3]
     return result
 
-print storage()
+#Function for synnex proxy servers
+def megaclistatus():
+    ctl_status = runcmd('/usr/sbin/megaclisas-status').split()
+    state = (ctl_status[37], ctl_status[48])
+    return state
+
+
+file_path = "/etc/stalker/scripts/data/check_os_drive"
+to_file = open(file_path, "w")
+
+if servertype() == "object":
+    if storage() != "Optimal":
+        result = "OS raid array is in %s state " % storage()
+        to_file.write(result)
+        to_file.close
+        sys.exit(2)
+elif servertype() == "proxy":
+    for line in megaclistatus():
+        if line != "Optimal":
+            result = "OS raid array is in %s state " % line
+            to_file.write(result)
+            to_file.close
+            sys.exit(2)
+else:
+    result = "OK"
+    to_file.write(result)
+    to_file.close
