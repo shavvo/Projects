@@ -16,12 +16,14 @@ def runcmd(cmd):
 
 
 #Function to get the synnex server type
-def serverType():
-    minion = runcmd("cat /etc/salt/minion")
-    data = [a for a in minion.split('\n')][6]
-    content = [c.replace('-','') for c in data]
-    content = "".join(content).strip()
-    return content
+def servertype():
+    ctrltype = runcmd("/usr/bin/lspci").split('\n')
+    for line in ctrltype:
+        if "MegaRAID" in line:
+            data = "3U"
+        elif "SAS1064ET" in line:
+            data = "4U"
+    return data
 
 
 #Function for synnex storage servers
@@ -48,20 +50,26 @@ def megaclistatus():
 file_path = "/etc/stalker/scripts/data/check_os_drive"
 to_file = open(file_path, "w")
 
-if servertype() == "object":
+if servertype() == "4U":
     if storage() != "Optimal":
+        print "4U"
         result = "OS raid array is in %s state " % storage()
         to_file.write(result)
         to_file.close
         sys.exit(2)
-elif servertype() == "proxy":
+    else:
+        result = "OK"
+        to_file.write(result)
+        to_file.close
+
+elif servertype() == "3U":
     for line in megaclistatus():
         if line != "Optimal":
             result = "OS raid array is in %s state " % line
             to_file.write(result)
             to_file.close
             sys.exit(2)
-else:
-    result = "OK"
-    to_file.write(result)
-    to_file.close
+        else:
+            result = "OK"
+            to_file.write(result)
+            to_file.close
