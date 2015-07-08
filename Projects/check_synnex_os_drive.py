@@ -17,6 +17,7 @@ def runcmd(cmd):
 
 #Function to get the synnex server type
 def servertype():
+    data = "3U"
     ctrltype = runcmd("/usr/bin/lspci").split('\n')
     for line in ctrltype:
         if "SAS1064ET" in line:
