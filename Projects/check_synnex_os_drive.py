@@ -19,9 +19,7 @@ def runcmd(cmd):
 def servertype():
     ctrltype = runcmd("/usr/bin/lspci").split('\n')
     for line in ctrltype:
-        if "MegaRAID" in line:
-            data = "3U"
-        elif "SAS1064ET" in line:
+        if "SAS1064ET" in line:
             data = "4U"
     return data
 
@@ -52,17 +50,16 @@ to_file = open(file_path, "w")
 
 if servertype() == "4U":
     if storage() != "Optimal":
-        print "4U"
         result = "OS raid array is in %s state " % storage()
         to_file.write(result)
         to_file.close
         sys.exit(2)
     else:
-        result = "OK"
+        result = "4U OK"
         to_file.write(result)
         to_file.close
 
-elif servertype() == "3U":
+else:
     for line in megaclistatus():
         if line != "Optimal":
             result = "OS raid array is in %s state " % line
@@ -70,6 +67,6 @@ elif servertype() == "3U":
             to_file.close
             sys.exit(2)
         else:
-            result = "OK"
+            result = "3U OK"
             to_file.write(result)
             to_file.close
