@@ -22,6 +22,7 @@ def servertype():
     for line in ctrltype:
         if "SAS1064ET" in line:
             data = "4U"
+            break
     return data
 
 
