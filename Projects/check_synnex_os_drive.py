@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# Author: Shavvo
+# Pulls the state of synnex 3U and 4U OS drives.
 
 import os
 import sys
@@ -26,7 +28,7 @@ def servertype():
     return data
 
 
-#Function for synnex storage servers
+#Function for synnex 4U storage servers OS drive state
 cfggen = "/usr/local/sbin/cfggen"
 def storage():
     # Load mptctl module
@@ -40,9 +42,10 @@ def storage():
     result = c_state.split()[3]
     return result
 
-#Function for synnex proxy servers
+#Function for synnex 3U proxy servers OS drive state
 def megaclistatus():
     ctl_status = runcmd('/usr/sbin/megaclisas-status').split()
+    # [37] c0u0 state [48] c0u1 state
     state = (ctl_status[37], ctl_status[48])
     return state
 
