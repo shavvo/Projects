@@ -60,7 +60,7 @@ if servertype() == "4U":
         to_file.close
         sys.exit(2)
     else:
-        result = "4U OK"
+        result = "OK"
         to_file.write(result)
         to_file.close
 
@@ -72,6 +72,6 @@ else:
             to_file.close
             sys.exit(2)
         else:
-            result = "3U OK"
+            result = "OK"
             to_file.write(result)
             to_file.close
