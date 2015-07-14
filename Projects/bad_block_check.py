@@ -9,6 +9,7 @@ import subprocess
 pos_file = '/etc/stalker/scripts/data/bad_blocks_position.json'
 error = "Storage Service  Virtual disk bad block medium error is detected"
 pos = {"lines_read" : 0, "creation_hash" : 0}
+result = '/etc/stalker/scripts/data/check_bad_block'
 
 with open(pos_file , 'a+') as f:
     try:
