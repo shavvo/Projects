@@ -53,8 +53,12 @@ for vdisk, controller in printlist:
     except subprocess.CalledProcessError as e:
         print "Error: ", e.output
 
-for element in block_list:
-    print "Bad Blocks in vdisk {0} controller {1}".format(element[0], element[1])
+with open(result, 'w') as f:
+    if block_list:
+        for element in block_list:
+            f.write("Bad Blocks in vdisk {0} controller {1} \n".format(element[0], element[1]))
+    else:
+        f.write("OK")
 
 pos['lines_read'] = count
 pos['creation_hash'] = pos_hash
