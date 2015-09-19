@@ -1,0 +1,63 @@
+syntax on
+set title
+set ruler
+set hlsearch
+set incsearch
+set expandtab
+"set autoindent
+set smartindent
+set smarttab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set ignorecase
+
+" 4-space tab widths for python (and pyrex)
+autocmd FileType py* setlocal shiftwidth=4 tabstop=8 softtabstop=4
+
+" highlight lines over 80 cols, spaces at the end of lines and tab characters
+highlight BadStyle ctermbg=darkblue ctermfg=green
+match BadStyle "\(\%>79v.\+\|\t\| \+$\)"
+
+" # key toggle comments in python
+function! TogglePythonComments()
+ if match(getline("."), '^ *#') >= 0
+   execute ':s+#++' |
+ else
+   execute ':s+^+#+' |
+ endif
+endfunction
+autocmd FileType python map @ :call TogglePythonComments()<cr>
+
+set background=dark
+" colorscheme delek
+highlight Search     ctermfg=white      ctermbg=darkblue     cterm=NONE
+
+map q :set invpaste<CR>
+
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+
+autocmd FileType go match BadStyle "ZZZZZZZZZZZZZZZZZZZZZZ"
+autocmd FileType get set noet softtabstop=0 tabstop=4
+au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+
+function! GoFormat()
+  if bufexists("godebug") != 0
+      execute ":bw godebug"
+  endif
+  let l = line(".")
+  let c = col(".")
+  let tmpname = tempname()
+  call writefile(getline(1,'$'), tmpname)
+  let out = system("goimports " . tmpname)
+  if v:shell_error == 0
+      execute ":%!goimports " . tmpname
+      call cursor(l, c)
+  else
+      execute ":new | :f godebug | :setlocal buftype=nofile | :resize 10 | :put=out"
+  endif
+endfunction
+autocmd BufWritePre *.go :call GoFormat()
