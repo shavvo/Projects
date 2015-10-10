@@ -30,7 +30,11 @@ def pull_serial(num):
         info = {}
         controller = run("/opt/dell/srvadmin/bin/omreport storage pdisk controller={1} pdisk={0}".format(item, num))
         serial = [a.split()[-1] for a in controller.split("\n") if 'Serial' in a]
+        s_content = [s.replace(' ',',') for s in serial]
+        s_content = "".join(s_content)
         capacity = [a.split()[2] for a in controller.split("\n") if 'Capacity' in a]
+        cap_content = [c.replace(' ',',') for c in capacity]
+        cap_content = "".join(cap_content)
         for line in controller.split("\n"):
             if 'Product' in line:
                 line_arr = line.split()
@@ -39,8 +43,8 @@ def pull_serial(num):
         info['Position'] = item
         info['Manufacturer'] = manufac
         info['ID'] = manufacid
-        info['Serial'] = serial
-        info['Size'] = capacity
+        info['Serial'] = s_content
+        info['Size'] = cap_content
         information.append(info)
     return information
 
