@@ -1,21 +1,22 @@
 #!/usr/bin/python
 
+#Sith(Smartdata information tool harvestor)
+
 import os
 import shlex
 import subprocess
 
-def run(cmdline):
-    args = shlex.split(cmdline)
-    cmd = ["/usr/bin/sudo"]
-    cmd.extend(args)
-    return subprocess.check_output(cmd, stderr=subprocess.STDOUT)
 
+def run(cmdline):
+    p = subprocess.Popen(cmdline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, err = p.communicate()
+    return p.returncode, output
 
 block_data = {}
 
 #Pulls physical disk info and adds to block_data
 def pd_serial(adapter):
-    pdisk_data = run('/opt/dell/srvadmin/bin/omreport storage pdisk controller={0}'.format(adapter))
+    rc, pdisk_data = run('/opt/dell/srvadmin/bin/omreport storage pdisk controller={0}'.format(adapter))
     for line in pdisk_data.split('\n'):
         if line.startswith("ID"):
             port = line.split()[-1]
@@ -28,7 +29,7 @@ pd_serial(1)
 pd_serial(2)
 
 # Scans for all drives connected
-scan = run('/home/aballens/smart-test/usr/local/sbin/smartctl --scan-open')
+rc, scan = run('/home/aballens/smart-test/usr/local/sbin/smartctl --scan-open')
 
 controllerdata = []
 
@@ -42,19 +43,16 @@ for line in scan.split("\n"):
         info['cont'] = line_arr[2]
         controllerdata.append(info)
 
-#smartdata = []
-
+# Gathers smart data for drives
 for item in controllerdata:
     if item['bus'] == '/dev/bus/0':
         pass
     else:
         try:
-            data = run('/home/aballens/smart-test/usr/local/sbin/smartctl -a {0} {1} {2}'.format(item['bus'],
-                        item['arg'], item['cont']))
-        except subprocess.CalledProcessError as e:
-            for line in e.output.split("\n"):
+            retco, data = run('/home/aballens/smart-test/usr/local/sbin/smartctl -a {0} {1} {2}'.format(item['bus'],
+                               item['arg'], item['cont']))
+            for line in data.split("\n"):
                 if line.startswith("Serial"):
-                    #smartdata.append(line)
                     serial = line.split()[-1]
                 if "Reallocated_Event_Count" in line:
                     r_event_count = line.split()[-1]
@@ -62,11 +60,13 @@ for item in controllerdata:
                     c_pending_sec = line.split()[-1]
                 if "Offline_Uncorrectable" in line:
                     offline_uncorrect = line.split()[-1]
-            for data in block_data.keys():
-                if serial in data:
+            for key in block_data.keys():
+                if serial in key:
                     block_data[serial]["Reallocated_Event_Count"] = r_event_count
                     block_data[serial]["Current_Pending_Sector"] = c_pending_sec
                     block_data[serial]["Offline_Uncorrectable"] = offline_uncorrect
+        except subprocess.CalledProcessError as e:
+            print "Error pulling smart data"
 
 
 for key, value in block_data.iteritems():
