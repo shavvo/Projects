@@ -29,7 +29,7 @@ pd_serial(1)
 pd_serial(2)
 
 # Scans for all drives connected
-rc, scan = run('/home/aballens/smart-test/usr/local/sbin/smartctl --scan-open')
+rc, scan = run('/usr/sbin/smartctl --scan-open')
 
 controllerdata = []
 
@@ -49,7 +49,7 @@ for item in controllerdata:
         pass
     else:
         try:
-            retco, data = run('/home/aballens/smart-test/usr/local/sbin/smartctl -a {0} {1} {2}'.format(item['bus'],
+            retco, data = run('/usr/sbin/smartctl -a {0} {1} {2}'.format(item['bus'],
                                item['arg'], item['cont']))
             for line in data.split("\n"):
                 if line.startswith("Serial"):
