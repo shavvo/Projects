@@ -13,7 +13,7 @@ parser.add_option("-r", "--report", action="store_true", dest="report",
                     help="Prints smartdata information for drives reporting bad values")
 
 parser.add_option("-s", "--search", action="store", dest="search", type="string",
-                     nargs=2, help="Searches for drive based off of controller and port")
+                     nargs=2, help="Searches for drive. Usage: sith_tool.py 1 0:0:0")
 
 (options, args) = parser.parse_args()
 
