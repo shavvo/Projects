@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-#Sith(Smartdata information telemetry harvestor)
+# Author: Shavvo
+# Sith(Smartdata information telemetry harvestor)
+# Pulls smartdata for drives on the server
 
 import os
 import shlex
