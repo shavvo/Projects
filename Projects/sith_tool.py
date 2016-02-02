@@ -34,11 +34,10 @@ if options.report:
         if smartdata[key]['Reallocated_Event_Count'] != "0" or \
         smartdata[key]['Current_Pending_Sector'] != "0" or \
         smartdata[key]['Offline_Uncorrectable'] != "0":
-            print (key, smartdata[key])
-            print '\n'
+            print json.dumps((key, smartdata[key]), indent=4)
 
 if options.search:
     for key in smartdata.keys():
         if smartdata[key]['Controller'] == int(sys.argv[2]) and \
             smartdata[key]['Port'] == sys.argv[3]:
-            print (key, smartdata[key])
+            print json.dumps((key, smartdata[key]), indent=4)
