@@ -60,7 +60,6 @@ for item in controllerdata:
                     serial = line.split()[-1]
                 if line != '' and line[0].isdigit():
                     line = line.split()
-                    #print (line[1], line[-1])
                     if serial in block_data.keys():
                         block_data[serial][line[1]] = line[-1]
         except subprocess.CalledProcessError as e:
