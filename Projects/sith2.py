@@ -63,21 +63,6 @@ for item in controllerdata:
                     #print (line[1], line[-1])
                     if serial in block_data.keys():
                         block_data[serial][line[1]] = line[-1]
-
-
-                #if line.startswith("Serial"):
-                #    serial = line.split()[-1]
-                #if "Reallocated_Event_Count" in line:
-                #    r_event_count = line.split()[-1]
-                #if "Current_Pending_Sector" in line:
-                #    c_pending_sec = line.split()[-1]
-                #if "Offline_Uncorrectable" in line:
-                #    offline_uncorrect = line.split()[-1]
-           # for key in block_data.keys():
-                #if serial in key:
-                    #block_data[serial]["Reallocated_Event_Count"] = r_event_count
-                    #block_data[serial]["Current_Pending_Sector"] = c_pending_sec
-                    #block_data[serial]["Offline_Uncorrectable"] = offline_uncorrect
         except subprocess.CalledProcessError as e:
             print "Error pulling smart data"
 
