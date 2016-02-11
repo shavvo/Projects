@@ -62,8 +62,10 @@ for item in controllerdata:
                     serial = line.split()[-1]
                 if line != '' and line[0].isdigit():
                     line = line.split()
+                    s = "_"
+                    data = s.join((str(line[0]), line[1]))
                     if serial in block_data.keys():
-                        block_data[serial][line[1]] = line[-1]
+                        block_data[serial][data] = line[-1]
         except subprocess.CalledProcessError as e:
             print "Error pulling smart data"
 
