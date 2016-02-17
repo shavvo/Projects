@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # Author Shavvo
-# Sith (Smartdata information telemetry harvestor
+# Sith (Smartdata information telemetry harvestor)
 # Pulls smardata for drives on the server
 
 import os
