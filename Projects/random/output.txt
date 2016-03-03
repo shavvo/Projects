@@ -1,0 +1,36 @@
+List of Physical Disks belonging to Virtual Disk 31
+
+Controller PERC H810 Adapter (Slot 6)
+ID                        : 1:0:7
+Status                    : Critical
+Name                      : Physical Disk 1:0:7
+State                     : Failed
+Power Status              : Spun Up
+Bus Protocol              : SATA
+Media                     : HDD
+Device Life Remaining     : Not Applicable
+Failure Predicted         : No
+Revision                  : MX6OABB0
+Driver Version            : Not Applicable
+Device Life Status        : Not Applicable
+Model Number              : Not Applicable
+Certified                 : No
+Encryption Capable        : No
+Encrypted                 : Not Applicable
+Progress                  : Not Applicable
+Mirror Set ID             : Not Applicable
+Capacity                  : 2,794.00 GB (3000034656256 bytes)
+Used RAID Disk Space      : 2,794.00 GB (3000034656256 bytes)
+Available RAID Disk Space : 0.00 GB (0 bytes)
+Hot Spare                 : No
+Vendor ID                 : ATA
+Product ID                : TOSHIBA DT01ACA300
+Serial No.                : 53IU4MLGS
+Part Number               : Not Available
+Negotiated Speed          : 6.00 Gbps
+Capable Speed             : 6.00 Gbps
+Device Write Cache        : Not Applicable
+Manufacture Day           : Not Available
+Manufacture Week          : Not Available
+Manufacture Year          : Not Available
+SAS Address               : 50030480008EB20F
