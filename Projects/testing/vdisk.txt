@@ -1,0 +1,21 @@
+Virtual Disk 7 on Controller PERC H810 Adapter (Slot 6)
+
+Controller PERC H810 Adapter (Slot 6)
+ID                                : 7
+Status                            : Ok
+Name                              : Virtual Disk 7
+State                             : Ready
+Hot Spare Policy violated         : Not Applicable
+Encrypted                         : No
+Layout                            : RAID-0
+Size                              : 3,725.50 GB (4000225165312 bytes)
+T10 Protection Information Status : No
+Associated Fluid Cache State      : Not Applicable
+Device Name                       : /dev/sdj
+Bus Protocol                      : SATA
+Media                             : HDD
+Read Policy                       : Adaptive Read Ahead
+Write Policy                      : Write Back
+Cache Policy                      : Not Applicable
+Stripe Element Size               : 64 KB
+Disk Cache Policy                 : Disabled
