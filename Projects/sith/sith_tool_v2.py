@@ -13,7 +13,7 @@ def create_columns():
     for key in data.values()[0].keys():
         key = [i.replace("-", "_") for i in key]
         key = "".join(key)
-        col = ",".join(["_%s VARCHAR(40)" % key])
+        col = ",".join(["_%s TEXT" % key])
         columns.append(col)
     return columns
 
