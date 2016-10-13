@@ -45,14 +45,14 @@ def insert_smartdata():
 
 
             if int(val['Reallocated_Event_Count']) != 0 or \
-                int(val['Reallocated_Event_Count']) != 0 or \
+                int(val['Reallocated_Sector_Ct']) != 0 or \
                 int(val['Current_Pending_Sector']) != 0 or \
                 int(val['Offline_Uncorrectable']) != 0:
                     conn.execute("insert into prefail_drivedata(serial, reallocated_event_cnt, "
                                  "reallocated_sect_cnt, current_pending_sect, offline_uncorrectable) "
                                  "VALUES (?, ?, ?, ?, ?)",
                                  (key, int(val['Reallocated_Event_Count']),
-                                  int(val['Reallocated_Event_Count']),
+                                  int(val['Reallocated_Sector_Ct']),
                                   int(val['Current_Pending_Sector']),
                                   int(val['Offline_Uncorrectable'])))
                     conn.commit()
