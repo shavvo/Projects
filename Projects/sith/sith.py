@@ -40,7 +40,7 @@ class Sith(object):
     """
 
     def get_controller_data(self):
-        rc, scan = run('/home/aballens/smart-test/usr/local/sbin/smartctl --scan-open')
+        rc, scan = run('/usr/sbin/smartctl --scan-open')
         controllerdata = []
         for line in scan.split('\n'):
             if 'bus' in line:
@@ -62,7 +62,7 @@ class Sith(object):
 
     def smart_ctl_attr(self, bus, arg, cont):
         try:
-            rc, data = run('/home/aballens/smart-test/usr/local/sbin/smartctl -iA {0} {1} {2}'.format(bus,
+            rc, data = run('/usr/sbin/smartctl -iA {0} {1} {2}'.format(bus,
                             arg, cont))
             output_dict = {}
             for line in data.split("\n"):
