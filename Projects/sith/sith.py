@@ -84,7 +84,7 @@ class Sith(object):
 
 
     """
-    Put is all together
+    Put it all together
     """
 
     def process_smart_data(self):
