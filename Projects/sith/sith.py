@@ -71,7 +71,8 @@ class Sith(object):
                     continue
                 key = None
                 if line_arr[0].isdigit():
-                    key = "%s_%s" % (line_arr[0], line_arr[1])
+                    #key = "%s_%s" % (line_arr[0], line_arr[1])
+                    key = line_arr[1]
                 elif line_arr[0].startswith("Serial"):
                     key = 'serial'
                 if key:
