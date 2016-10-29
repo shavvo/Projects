@@ -101,3 +101,75 @@ def unblink(controller, pdisk, **kwargs):
               " has been turned off!".format(unblink, pdisk, controller)
     else:
         print unblink
+
+##########
+#Run getfailed tool
+##########
+
+def getfailed(**kwargs):
+    if kwargs['force'] == True:
+        _run('/usr/bin/swift-getfailed-device -c /etc/swift-admintools/config/swift_admintools.conf -f')
+    else:
+        _run('/usr/bin/swift-getfailed-device -c /etc/swift-admintools/config/swift_admintools.conf')
+
+##########
+#Run replacement script
+##########
+
+def replace(**kwargs):
+    _run('/usr/bin/swift-replace-device -c /etc/swift-admintools/config/swift_admintools.conf')
+
+##########
+#Suspend all admintools cron jobs
+##########
+
+def suspend(**kwargs):
+    if os.access('/etc/cron.d', os.W_OK):
+        try:
+            os.rename('/etc/cron.d/swift-admintools', '/etc/cron.d/swift-admintools.suspended')
+            print "Successfully suspended admintools cronjobs. Please resume when completed!"
+        except OSError as e:
+            if e.errno == 2:
+                print "/etc/cron.d/swift-admintools cron not found"
+            else:
+                print "Unexpected error: {0}".format(e.args[1])
+    else:
+        print "Please run as root!"
+
+##########
+#Resume all admintools cron jobs
+##########
+
+def resume(**kwargs):
+    if os.access('/etc/cron.d', os.W_OK):
+        try:
+            os.rename('/etc/cron.d/swift-admintools.suspended', '/etc/cron.d/swift-admintools')
+            print "Successfully resumed admintools cronjobs."
+        except OSError as e:
+            if e.errno == 2:
+                print "/etc/cron.d/swift-admintools.suspended not found"
+            else:
+                print "Unexpected error: {0}".format(e.args[1])
+    else:
+        print "Please run as root!"
+
+
+##########
+#Create a virtual disk
+##########
+
+def createvdisk(controller, pdisk, **kwargs):
+    rc, cr_vdisk = _run('{0} storage controller action=createvdisk '
+                        'controller={1} pdisk={2} raid=r0 size=max '
+                        'stripesize=64kb diskcachepolicy=disabled '
+                        'readpolicy=ara writepolicy=wb'.format(omconfig, controller, pdisk))
+    print cr_vdisk
+
+##########
+#Delete a virtual disk
+##########
+
+def deletevdisk(controller, vdisk, **kwargs):
+    rc, del_vdisk = _run('{0} storage vdisk action=deletevdisk '
+                         'controller={1} vdisk={2}'.format(omconfig, controller, vdisk))
+    print del_vdisk
