@@ -74,6 +74,46 @@ deletevdisk.add_argument('controller', type=int, nargs='?', help=controller_help
 deletevdisk.add_argument('vdisk', type=int, nargs='?', help=vdisk_help)
 deletevdisk.set_defaults(func=admintools.deletevdisk)
 
+# Clear foreign controller config
+clearforeignconfig = sub.add_parser('clearforeignconfig', help='Clear foreign controller config')
+clearforeignconfig.add_argument('controller', type=int, nargs='?', help=controller_help)
+clearforeignconfig.set_defaults(func=admintools.clearforeignconfig)
+
+# Import foreign controller config
+importforeignconfig = sub.add_parser('importforeignconfig', help='Import foreign controller config')
+importforeignconfig.add_argument('controller', type=int, nargs='?', help=controller_help)
+importforeignconfig.set_defaults(func=admintools.importforeignconfig)
+
+# Discard preserved controller cache
+discardpreservedcache = sub.add_parser('discardpreservedcache', help='Discard controller cache')
+discardpreservedcache.add_argument('controller', type=int, nargs='?', help=controller_help)
+discardpreservedcache.set_defaults(func=admintools.discardpreservedcache)
+
+# Query drive failures database
+failures = sub.add_parser('failures', help='Query drive failures database')
+failures.add_argument('-f', '--full', action='store_true', help='Shows full drive failure report')
+failures.set_defaults(func=admintools.failures)
+
+# Change status of drive to completed in failures DB
+setcomplete = sub.add_parser('setcomplete', help='Change drive status to complete in failures DB')
+setcomplete.add_argument('timestamp', type=int, nargs='?', help='Timestamp of entry EX:12345677')
+setcomplete.set_defaults(func=admintools.setcomplete)
+
+# Change status of drive to in progress in failures DB
+setinprogress = sub.add_parser('setinprogress', help='Change drive status to in progress in failures DB')
+setinprogress.add_argument('timestamp', type=int, nargs='?', help='Timestamp of entry EX:12345677')
+setinprogress.set_defaults(func=admintools.setinprogress)
+
+# Reports smartdata values for drives
+smartdatareport = sub.add_parser('smartdatareport', help='Reports smartdata values for drives')
+smartdatareport.add_argument('-a', '--all', action='store_true', help='Reports all drives smartdata')
+smartdatareport.add_argument('-r', '--report', action='store_true', help='Reports drives with bad smartdata')
+smartdatareport.set_defaults(func=admintools.smartdatareport)
+
+# Search smartdata DB for specific drive
+smartdatasearch = sub.add_parser('smartdatasearch', help='Search smartdataDB for specific drive')
+smartdatasearch.add_argument('serial', type=str, nargs='?', help='Serial number of drive EX: WD-ASDVSDASDA')
+smartdatasearch.set_defaults(func=admintools.smartdatasearch)
+
 args = parser.parse_args()
-print args
 args.func(**vars(args))
